@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>С Новым Годом!</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 100%, #0b1a3a, #000);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  canvas { position: absolute; top: 0; left: 0; }
+  .greeting {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    font-size: 3em;
+    text-shadow: 0 0 20px #fff, 0 0 40px #0ff;
+    animation: glow 2s infinite alternate;
+  }
+  @keyframes glow {
+    from { text-shadow: 0 0 20px #fff, 0 0 40px #0ff; }
+    to   { text-shadow: 0 0 30px #fff, 0 0 60px #f0f; }
+  }
+</style>
+</head>
+<body>
+<div class="greeting">🎄 С Новым Годом! 🎄</div>
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// Снежинки
+const snowflakes = [];
+for (let i = 0; i < 150; i++) {
+  snowflakes.push({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 3 + 1,
+    speed: Math.random() * 1.5 + 0.5,
+    drift: Math.random() * 0.5 - 0.25
+  });
+}
+
+function drawSnow() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  snowflakes.forEach(f => {
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+    ctx.fill();
+    f.y += f.speed;
+    f.x += f.drift;
+    if (f.y > H) { f.y = -5; f.x = Math.random() * W; }
+    if (f.x > W) f.x = 0;
+    if (f.x < 0) f.x = W;
+  });
+  requestAnimationFrame(drawSnow);
+}
+drawSnow();
+</script>
+</body>
+</html>
